@@ -1,7 +1,13 @@
 const c = document.getElementById("myCanvas");
 const ctx = c.getContext("2d");
 
-const imagePath = (frameNumber, animation) =>
+const FRAMES = {
+  idle: [1, 2, 3, 4, 5, 6, 7, 8],
+  kick: [1, 2, 3, 4, 5, 6, 7],
+  punch: [1, 2, 3, 4, 5, 6, 7],
+};
+
+const imagePath = (animation, frameNumber) =>
   `images/${animation}/${frameNumber}.png`;
 
 const loadImage = (src, callback) => {
@@ -10,40 +16,52 @@ const loadImage = (src, callback) => {
   img.src = src;
 };
 
-const loadImages = (imageIndex, animation, callback) => {
-  let loadedImages = [];
-  imageIndex.forEach((frameNumber) => {
-    let path = imagePath(frameNumber, animation);
-    loadImage(path, (img) => {
-      loadedImages.push(img);
-      if (loadedImages.length === imageIndex.length) callback(loadedImages);
+const loadImages = (callback) => {
+  let loadedImages = { idle: [], kick: [], punch: [] };
+  let imagesToLoad = 0;
+  ["idle", "kick", "punch"].forEach((animation) => {
+    let animationFrames = FRAMES[animation];
+    imagesToLoad += FRAMES[animation].length;
+
+    animationFrames.forEach((frameNumber) => {
+      let path = imagePath(animation, frameNumber);
+      loadImage(path, (img) => {
+        loadedImages[animation].push(img);
+        imagesToLoad--;
+        if (imagesToLoad === 0) callback(loadedImages);
+      });
     });
   });
 };
 
-const animate = (ctx, images, callback) => {
-  images.forEach((img, idx) => {
+const animate = (ctx, images, animationToPlay, callback) => {
+  images[animationToPlay].forEach((img, idx) => {
     setTimeout(() => {
       ctx.clearRect(0, 0, 500, 500);
       ctx.drawImage(img, 0, 0, 500, 500);
     }, idx * 100);
   });
-  setTimeout(callback, images.length * 100);
+  setTimeout(callback, images[animationToPlay].length * 100);
 };
 
-loadImages([1, 2, 3, 4, 5, 6, 7], "idle", (images) => {
-  animate(ctx, images, () => console.log("Idle Done"));
-});
+loadImages((images) => {
+  console.log(images);
+  const queuedAnimations = [];
+  let aux = () => {
+    let selectedAnimation;
+    if (queuedAnimations.length === 0) selectedAnimation = "idle";
+    else selectedAnimation = queuedAnimations.shift();
+    animate(ctx, images, selectedAnimation, aux);
+  };
+  aux();
+  document.getElementById("kick").onclick = () => queuedAnimations.push("kick");
+  document.getElementById("punch").onclick = () =>
+    queuedAnimations.push("punch");
 
-document.getElementById("kick").addEventListener("click", () => {
-  console.log("kick");
-  loadImages([1, 2, 3, 4, 5, 6, 7], "kick", (images) => {
-    animate(ctx, images, () => console.log("Kick Done"));
-  });
-});
-document.getElementById("punch").addEventListener("click", () => {
-  console.log("punch");
-  loadImages([1, 2, 3, 4, 5, 6, 7], "punch", (images) => {
-    animate(ctx, images, () => console.log("Punch Done"));
+  document.addEventListener("keydown", (event) => {
+    const key = event.key;
+
+    if (key === "ArrowLeft") queuedAnimations.push("kick");
+    else if (key === "ArrowRight") queuedAnimations.push("punch");
   });
 });
