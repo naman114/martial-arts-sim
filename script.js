@@ -1,7 +1,8 @@
 const c = document.getElementById("myCanvas");
 const ctx = c.getContext("2d");
 
-const imagePath = (frameNumber) => `images/idle/${frameNumber}.png`;
+const imagePath = (frameNumber, animation) =>
+  `images/${animation}/${frameNumber}.png`;
 
 const loadImage = (src, callback) => {
   let img = document.createElement("img");
@@ -9,13 +10,13 @@ const loadImage = (src, callback) => {
   img.src = src;
 };
 
-const loadImages = (callback) => {
+const loadImages = (imageIndex, animation, callback) => {
   let loadedImages = [];
-  [1, 2, 3, 4, 5, 6, 7, 8].forEach((frameNumber) => {
-    let path = imagePath(frameNumber);
+  imageIndex.forEach((frameNumber) => {
+    let path = imagePath(frameNumber, animation);
     loadImage(path, (img) => {
       loadedImages.push(img);
-      if (loadedImages.length === 8) callback(loadedImages);
+      if (loadedImages.length === imageIndex.length) callback(loadedImages);
     });
   });
 };
@@ -30,6 +31,19 @@ const animate = (ctx, images, callback) => {
   setTimeout(callback, images.length * 100);
 };
 
-loadImages((images) => {
-  animate(ctx, images, () => console.log("Done"));
+loadImages([1, 2, 3, 4, 5, 6, 7], "idle", (images) => {
+  animate(ctx, images, () => console.log("Idle Done"));
+});
+
+document.getElementById("kick").addEventListener("click", () => {
+  console.log("kick");
+  loadImages([1, 2, 3, 4, 5, 6, 7], "kick", (images) => {
+    animate(ctx, images, () => console.log("Kick Done"));
+  });
+});
+document.getElementById("punch").addEventListener("click", () => {
+  console.log("punch");
+  loadImages([1, 2, 3, 4, 5, 6, 7], "punch", (images) => {
+    animate(ctx, images, () => console.log("Punch Done"));
+  });
 });
