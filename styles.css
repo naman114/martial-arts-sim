@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "Gang of Three";
+  src: url("./fonts/go3v2.ttf");
+}
+
 body {
   background-image: url("./images/background.jpg");
   background-size: cover;
@@ -6,6 +11,15 @@ body {
   background-attachment: fixed;
   position: relative;
   overflow: hidden;
+}
+
+/* Title */
+.title {
+  position: absolute;
+  top: 1%;
+  left: 2%;
+  font-family: "Gang of Three";
+  font-size: 38px;
 }
 
 /* Canvas */
@@ -21,12 +35,13 @@ body {
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 20%;
+  top: 15%;
   right: 5%;
 }
 
 .button {
-  font-size: 16px;
+  font-family: "Gang of Three";
+  font-size: 20px;
   letter-spacing: 2px;
   font-weight: 400 !important;
   background-color: #e0a400;
