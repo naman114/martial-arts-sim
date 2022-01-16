@@ -5,6 +5,9 @@ const FRAMES = {
   idle: [1, 2, 3, 4, 5, 6, 7, 8],
   kick: [1, 2, 3, 4, 5, 6, 7],
   punch: [1, 2, 3, 4, 5, 6, 7],
+  backward: [1, 2, 3, 4, 5, 6],
+  block: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+  forward: [1, 2, 3, 4, 5, 6],
 };
 
 const imagePath = (animation, frameNumber) =>
@@ -17,21 +20,30 @@ const loadImage = (src, callback) => {
 };
 
 const loadImages = (callback) => {
-  let loadedImages = { idle: [], kick: [], punch: [] };
+  let loadedImages = {
+    idle: [],
+    kick: [],
+    punch: [],
+    backward: [],
+    block: [],
+    forward: [],
+  };
   let imagesToLoad = 0;
-  ["idle", "kick", "punch"].forEach((animation) => {
-    let animationFrames = FRAMES[animation];
-    imagesToLoad += FRAMES[animation].length;
+  ["idle", "kick", "punch", "backward", "block", "forward"].forEach(
+    (animation) => {
+      let animationFrames = FRAMES[animation];
+      imagesToLoad += FRAMES[animation].length;
 
-    animationFrames.forEach((frameNumber) => {
-      let path = imagePath(animation, frameNumber);
-      loadImage(path, (img) => {
-        loadedImages[animation].push(img);
-        imagesToLoad--;
-        if (imagesToLoad === 0) callback(loadedImages);
+      animationFrames.forEach((frameNumber) => {
+        let path = imagePath(animation, frameNumber);
+        loadImage(path, (img) => {
+          loadedImages[animation].push(img);
+          imagesToLoad--;
+          if (imagesToLoad === 0) callback(loadedImages);
+        });
       });
-    });
-  });
+    }
+  );
 };
 
 const animate = (ctx, images, animationToPlay, callback) => {
@@ -54,14 +66,34 @@ loadImages((images) => {
     animate(ctx, images, selectedAnimation, aux);
   };
   aux();
-  document.getElementById("kick").onclick = () => queuedAnimations.push("kick");
-  document.getElementById("punch").onclick = () =>
+  document.getElementById("kick").onclick = (event) => {
+    event.target.blur();
+    queuedAnimations.push("kick");
+  };
+  document.getElementById("punch").onclick = (event) => {
+    event.target.blur();
     queuedAnimations.push("punch");
+  };
+  document.getElementById("backward").onclick = (event) => {
+    event.target.blur();
+    queuedAnimations.push("backward");
+  };
+  document.getElementById("block").onclick = (event) => {
+    event.target.blur();
+    queuedAnimations.push("block");
+  };
+  document.getElementById("forward").onclick = (event) => {
+    event.target.blur();
+    queuedAnimations.push("forward");
+  };
 
   document.addEventListener("keydown", (event) => {
-    const key = event.key;
+    const key = event.code;
 
-    if (key === "ArrowLeft") queuedAnimations.push("kick");
-    else if (key === "ArrowRight") queuedAnimations.push("punch");
+    if (key === "Space") queuedAnimations.push("kick");
+    else if (key === "KeyD") queuedAnimations.push("punch");
+    else if (key === "KeyA") queuedAnimations.push("backward");
+    else if (key === "KeyS") queuedAnimations.push("block");
+    else if (key === "KeyW") queuedAnimations.push("forward");
   });
 });

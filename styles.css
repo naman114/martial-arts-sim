@@ -1,0 +1,51 @@
+body {
+  background-image: url("./images/background.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  background-attachment: fixed;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Canvas */
+.canvas {
+  position: absolute;
+  top: 60%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+}
+
+/* Buttons */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 20%;
+  right: 5%;
+}
+
+.button {
+  font-size: 16px;
+  letter-spacing: 2px;
+  font-weight: 400 !important;
+  background-color: #e0a400;
+  color: #fff;
+  padding: 23px 30px;
+  margin: auto;
+  text-align: center;
+  display: inline-block !important;
+  text-decoration: none;
+  border: 0px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s 0s ease-in-out;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.button:hover {
+  transform: scale(1.04, 1);
+  background-color: #c18a00;
+  text-decoration: none;
+}
