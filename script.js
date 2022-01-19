@@ -66,26 +66,13 @@ loadImages((images) => {
     animate(ctx, images, selectedAnimation, aux);
   };
   aux();
-  document.getElementById("kick").onclick = (event) => {
-    event.target.blur();
-    queuedAnimations.push("kick");
-  };
-  document.getElementById("punch").onclick = (event) => {
-    event.target.blur();
-    queuedAnimations.push("punch");
-  };
-  document.getElementById("backward").onclick = (event) => {
-    event.target.blur();
-    queuedAnimations.push("backward");
-  };
-  document.getElementById("block").onclick = (event) => {
-    event.target.blur();
-    queuedAnimations.push("block");
-  };
-  document.getElementById("forward").onclick = (event) => {
-    event.target.blur();
-    queuedAnimations.push("forward");
-  };
+
+  ["kick", "punch", "backward", "block", "forward"].forEach((item) => {
+    document.getElementById(item).onkeyup = (event) => {
+      event.target.blur();
+      queuedAnimations.push(item);
+    };
+  });
 
   document.addEventListener("keyup", (event) => {
     const key = event.code;
