@@ -87,7 +87,7 @@ loadImages((images) => {
     queuedAnimations.push("forward");
   };
 
-  document.addEventListener("keydown", (event) => {
+  document.addEventListener("keyup", (event) => {
     const key = event.code;
 
     if (key === "Space") queuedAnimations.push("kick");
